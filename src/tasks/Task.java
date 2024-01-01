@@ -1,17 +1,17 @@
+package tasks;
 import java.util.Objects;
 
 public class Task {
-    protected final int id;
+    protected int id;
     protected String name;
     protected String description;
     protected TaskStatus taskStatus;
 
 
-    public Task(int id, String name, String description, TaskStatus taskStatus) {
-        this.id = id;
+    public Task(String name, String description) {
         this.name = name;
         this.description = description;
-        this.taskStatus = taskStatus;
+        this.taskStatus = TaskStatus.NEW;
     }
 
     @Override
@@ -43,5 +43,21 @@ public class Task {
 
     public TaskStatus getTaskStatus() {
         return taskStatus;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
