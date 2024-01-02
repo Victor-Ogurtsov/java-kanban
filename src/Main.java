@@ -74,7 +74,9 @@ public class Main {
         System.out.println(taskManager.getAllSubTasks());
 
         System.out.println("Удаление всех задач/Epic задач/подзадач");
-        taskManager.removeAllTask();
+        taskManager.removeAllTasks();
+        taskManager.removeAllEpics();
+        taskManager.removeAllSubTasks();
 
         System.out.println("Вывод списка всех задач");
         System.out.println(taskManager.getAllTasks());

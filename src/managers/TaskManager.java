@@ -29,11 +29,10 @@ public class TaskManager {
     }
 
     public SubTask addSubTask(int epicId, SubTask subTask){
-        subTask.setId(id);
+        subTask.setId(id++);
         subTask.setEpicId(epicId);
         subTasks.put(subTask.getId(), subTask);
-        epics.get(epicId).setSubTaskId(id);
-        id++;
+        epics.get(epicId).setSubTaskId(subTask.getId());
         return subTask;
     }
 
@@ -131,7 +130,19 @@ public class TaskManager {
         subTasks.remove(subTaskId);
     }
 
-    public void removeAllTask(){
+    public void removeAllTasks(){
+        tasks.clear();
+    }
+
+    public void removeAllEpics(){
+        epics.clear();
+    }
+
+    public void removeAllSubTasks(){
+        subTasks.clear();
+    }
+
+    public void removeAllTasksTypes(){
         tasks.clear();
         epics.clear();
         subTasks.clear();
