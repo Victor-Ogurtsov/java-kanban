@@ -1,5 +1,7 @@
 package tasks;
 
+import java.util.ArrayList;
+
 public class SubTask extends Task{
    private int epicId;
 
@@ -24,5 +26,14 @@ public class SubTask extends Task{
 
     public void setEpicId(int epicId) {
         this.epicId = epicId;
+    }
+
+    @Override
+    public Task createCopyTask(Task task){
+        SubTask newSubTask = new SubTask(task.getName(), task.getDescription());
+        newSubTask.setId(task.getId());
+        newSubTask.setTaskStatus(task.getTaskStatus());
+        newSubTask.setEpicId(((SubTask) task).getEpicId());
+        return newSubTask;
     }
 }

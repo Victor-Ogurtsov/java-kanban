@@ -7,7 +7,6 @@ public class Task {
     protected String description;
     protected TaskStatus taskStatus;
 
-
     public Task(String name, String description) {
         this.name = name;
         this.description = description;
@@ -57,7 +56,22 @@ public class Task {
         this.name = name;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Task createCopyTask(Task task){
+        Task newTask = new Task(task.getName(),task.getDescription());
+        newTask.setId(task.getId());
+        newTask.setTaskStatus(task.getTaskStatus());
+        return newTask;
     }
 }

@@ -11,11 +11,28 @@ public class Epic extends Task {
     }
 
     public void setSubTaskId(Integer subTaskId) {
+        if (subTaskId == id) {
+            return;
+        }
         subTasksId.add(subTaskId);
     }
 
     public ArrayList<Integer> getSubTasksId() {
         return subTasksId;
+    }
+
+    @Override
+    public Task createCopyTask(Task task){
+        Epic newEpic = new Epic(task.getName(),task.getDescription());
+        newEpic.setId(task.getId());
+        newEpic.setTaskStatus(task.getTaskStatus());
+        ArrayList<Integer> subTasksId = ((Epic) task).getSubTasksId();
+        ArrayList<Integer> newSubTasksId = new ArrayList<>();
+        for(Integer id : subTasksId) {
+            newSubTasksId.add(id);
+        }
+        ((Epic) newEpic).setSubTasksId(newSubTasksId);
+        return newEpic;
     }
 
     @Override
@@ -31,5 +48,9 @@ public class Epic extends Task {
 
     public int getSizeSubTasksIdList(){
         return subTasksId.size();
+    }
+
+    public void setSubTasksId(ArrayList<Integer> subTasksId) {
+        this.subTasksId = subTasksId;
     }
 }
