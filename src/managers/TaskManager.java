@@ -2,7 +2,7 @@ package managers;
 
 import tasks.*;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public interface TaskManager {
     Task addTask(Task task);
@@ -13,11 +13,11 @@ public interface TaskManager {
 
     void setActualTaskStatusEpic(Epic epic);
 
-    ArrayList<Task> getAllTasks();
+    List<Task> getAllTasks();
 
-    ArrayList<Epic> getAllEpics();
+    List<Epic> getAllEpics();
 
-    ArrayList<SubTask> getAllSubTasks();
+    List<SubTask> getAllSubTasks();
 
     void updateTask(Task task);
 
@@ -47,5 +47,5 @@ public interface TaskManager {
 
     void removeAllTasksTypes();
 
-    ArrayList<Task> getHistory();
+    List<Task> getHistory();
 }

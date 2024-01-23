@@ -5,8 +5,10 @@ import tasks.SubTask;
 import tasks.Task;
 
 import java.util.ArrayList;
+import java.util.List;
+
 public class InMemoryHistoryManager implements HistoryManager {
-    private final ArrayList<Task> historyViewedTasks = new ArrayList<>();
+    private final List<Task> historyViewedTasks = new ArrayList<>();
 
     @Override
     public void add(Task task){
@@ -21,13 +23,13 @@ public class InMemoryHistoryManager implements HistoryManager {
             historyViewedTasks.add(savesTask);
         }
 
-        if (historyViewedTasks.size() == 11){
+        if (historyViewedTasks.size() > 10){
             historyViewedTasks.remove(0);
         }
     }
 
     @Override
-    public ArrayList<Task> getHistory(){
+    public List<Task> getHistory(){
         return historyViewedTasks;
     }
 }

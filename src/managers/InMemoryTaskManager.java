@@ -1,15 +1,18 @@
 package managers;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
+
 import tasks.*;
 
 public class InMemoryTaskManager implements TaskManager {
     private static int id = 1;
 
-    private final HashMap<Integer, Task> tasks;
-    private final HashMap<Integer, Epic> epics;
-    private final HashMap<Integer, SubTask> subTasks;
+    private final Map<Integer, Task> tasks;
+    private final Map<Integer, Epic> epics;
+    private final Map<Integer, SubTask> subTasks;
     private final HistoryManager historyManager = Managers.getDefaultHistory();
 
     public InMemoryTaskManager(){
@@ -66,17 +69,17 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public ArrayList<Task> getAllTasks(){
+    public List<Task> getAllTasks(){
         return new ArrayList<>(tasks.values());
     }
 
     @Override
-    public ArrayList<Epic> getAllEpics(){
+    public List<Epic> getAllEpics(){
         return new ArrayList<>(epics.values());
     }
 
     @Override
-    public ArrayList<SubTask> getAllSubTasks(){
+    public List<SubTask> getAllSubTasks(){
         return new ArrayList<>(subTasks.values());
     }
 
@@ -107,32 +110,32 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task getTask(int id){
-        if (tasks.containsKey(id) == false){
-            return null;
-        } else {
+        Task task = tasks.get(id);
+        if (task != null){
             historyManager.add(tasks.get(id));
             return tasks.get(id);
         }
+        return null;
     }
 
     @Override
     public Epic getEpic(int id){
-        if (epics.containsKey(id) == false){
-            return null;
-        } else {
+        Epic epic = epics.get(id);
+        if (epic != null) {
             historyManager.add(epics.get(id));
             return epics.get(id);
         }
+        return null;
     }
 
     @Override
     public SubTask getSubtask(int id){
-        if (subTasks.containsKey(id) == false){
-            return null;
-        } else {
+        SubTask subTask = subTasks.get(id);
+        if (subTask != null){
             historyManager.add(subTasks.get(id));
             return subTasks.get(id);
         }
+        return null;
     }
 
     @Override
@@ -195,7 +198,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public ArrayList<Task> getHistory(){
+    public List<Task> getHistory(){
         return historyManager.getHistory();
     }
 }
