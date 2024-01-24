@@ -17,7 +17,7 @@ public class SubTaskTest {
     }
 
     @Test //проверьте, что объект Subtask нельзя сделать своим же эпиком;
-    public void shouldReturnNullIfEpicIdEqualsSubTaskId() {пше
+    public void shouldReturnNullIfEpicIdEqualsSubTaskId() {
         TaskManager inMemoryTaskManager = new InMemoryTaskManager();
         SubTask subTask = new SubTask("name", "descriptions");
         subTask.setId(1);

@@ -23,7 +23,7 @@ public class InMemoryHistoryManagerTest {
     public void shouldReturn10Tasks() {
         InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager();
         Task task = inMemoryTaskManager.addTask(new Task("name", "descriptions"));
-        for (int i = 1; i <= 11; i++){
+        for (int i = 1; i <= 31; i++){
             inMemoryTaskManager.getTask(task.getId());
         }
         int sizeTasksHistorylist = inMemoryTaskManager.getHistory().size();
