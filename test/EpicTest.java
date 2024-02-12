@@ -26,7 +26,7 @@ public class EpicTest {
     }
 
     @Test
-    public void shoulReturnNullIfRemoveSubTask(){
+    public void shoulEqualZeroIfRemoveSubTask(){
         TaskManager inMemoryTaskManager = Managers.getDefault();
         Epic epic = inMemoryTaskManager.addEpic(new Epic("name1", "descriptions1"));
         SubTask subTask = inMemoryTaskManager.addSubTask(epic.getId(), new SubTask("name2", "descriptions2"));
@@ -35,7 +35,7 @@ public class EpicTest {
 
         inMemoryTaskManager.removeSubTask(subTask.getId());
 
-        Assertions.assertNull(epic.getSubTasksId().get(subTask.getId()), "Подзадача осталась в списке подзадач эпика" +
+        Assertions.assertEquals(0,epic.getSubTasksId().size(), "Подзадача осталась в списке подзадач эпика" +
                 "после удаления");
     }
 }

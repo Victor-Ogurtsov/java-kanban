@@ -48,16 +48,17 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void add(Task task){
-        if (task instanceof SubTask) {
-            SubTask savesSubTask = (SubTask) task.createCopyTask(task);
-            addNewNode(savesSubTask);
-        } else if (task instanceof Epic) {
-            Epic savesEpic = (Epic) task.createCopyTask(task);
-            addNewNode(savesEpic);
-        } else {
-            Task savesTask = task.createCopyTask(task);
-            addNewNode(savesTask);
+        addNewNode(getCopyTask(task));
+    }
+
+    public void updateHistory(Task task) {
+        if (nodesMap.containsKey(task.getId())) {
+            nodesMap.get(task.getId()).task = getCopyTask(task);
         }
+    }
+
+    public Task getCopyTask(Task task) {
+        return task.createCopyTask(task);
     }
 
     void addNewNode(Task task){
