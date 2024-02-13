@@ -89,6 +89,7 @@ public class InMemoryTaskManager implements TaskManager {
             return;
         }
         tasks.put(task.getId(), task);
+        ((InMemoryHistoryManager) historyManager).updateHistory(task);
     }
 
     @Override
@@ -97,6 +98,7 @@ public class InMemoryTaskManager implements TaskManager {
             return;
         }
         epics.put(epic.getId(), epic);
+        ((InMemoryHistoryManager) historyManager).updateHistory(epic);
     }
 
     @Override
@@ -106,6 +108,8 @@ public class InMemoryTaskManager implements TaskManager {
         }
         subTasks.put(subTask.getId(), subTask);
         setActualTaskStatusEpic(epics.get(subTask.getEpicId()));
+        ((InMemoryHistoryManager) historyManager).updateHistory(subTask);
+        ((InMemoryHistoryManager) historyManager).updateHistory(epics.get(subTask.getEpicId()));
     }
 
     @Override
@@ -148,15 +152,18 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void removeTask(int taskId){
         tasks.remove(taskId);
+        historyManager.remove(taskId);
     }
 
     @Override
     public void removeEpic(int epicId){
-        ArrayList<Integer> subTasksId= epics.get(epicId).getSubTasksId();
+        ArrayList<Integer> subTasksId = epics.get(epicId).getSubTasksId();
         for (Integer id : subTasksId){
             subTasks.remove(id);
+            historyManager.remove(id);
         }
         epics.remove(epicId);
+        historyManager.remove(epicId);
     }
 
     @Override
@@ -164,22 +171,36 @@ public class InMemoryTaskManager implements TaskManager {
         int epicId = subTasks.get(subTaskId).getEpicId();
         epics.get(epicId).getSubTasksId().remove(subTaskId);
         subTasks.remove(subTaskId);
+        historyManager.remove(subTaskId);
         setActualTaskStatusEpic(epics.get(epicId));
+        ((InMemoryHistoryManager) historyManager).updateHistory(epics.get(epicId));
     }
 
     @Override
     public void removeAllTasks(){
+        for (Task task : tasks.values()) {
+            historyManager.remove(task.getId());
+        }
         tasks.clear();
     }
 
     @Override
     public void removeAllEpics(){
+        for (Epic epic : epics.values()) {
+            historyManager.remove(epic.getId());
+        }
         epics.clear();
+        for (SubTask subTask : subTasks.values()) {
+            historyManager.remove(subTask.getId());
+        }
         subTasks.clear();
     }
 
     @Override
     public void removeAllSubTasks(){
+        for (SubTask subTask : subTasks.values()) {
+            historyManager.remove(subTask.getId());
+        }
         subTasks.clear();
         for (Epic epic : epics.values()) {
             epic.getSubTasksId().clear();

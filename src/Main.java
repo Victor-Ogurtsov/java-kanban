@@ -70,6 +70,9 @@ public class Main {
         System.out.println("Удаление подзадачи по идентификатору");
         inMemoryTaskManager.removeSubTask(newSubTask1.getId());
 
+        System.out.println("Вывод истории просмотра задач:");
+        System.out.println(inMemoryTaskManager.getHistory());
+
         System.out.println("Вывод списка всех задач");
         System.out.println(inMemoryTaskManager.getAllTasks());
         System.out.println("Вывод списка всех сложных задач Epic");
@@ -88,5 +91,8 @@ public class Main {
         System.out.println(inMemoryTaskManager.getAllEpics());
         System.out.println("Вывод списка всех подзадач");
         System.out.println(inMemoryTaskManager.getAllSubTasks());
+
+        System.out.println("Вывод истории просмотра задач:");
+        System.out.println(inMemoryTaskManager.getHistory());
     }
 }
