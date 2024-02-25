@@ -8,12 +8,12 @@ import java.util.List;
 import tasks.*;
 
 public class InMemoryTaskManager implements TaskManager {
-    private static int id = 1;
+    protected static int id = 1;
 
-    private final Map<Integer, Task> tasks;
-    private final Map<Integer, Epic> epics;
-    private final Map<Integer, SubTask> subTasks;
-    private final HistoryManager historyManager = Managers.getDefaultHistory();
+    protected final Map<Integer, Task> tasks;
+    protected final Map<Integer, Epic> epics;
+    protected final Map<Integer, SubTask> subTasks;
+    protected final HistoryManager historyManager = Managers.getDefaultHistory();
 
     public InMemoryTaskManager(){
         tasks = new HashMap<>();
