@@ -25,8 +25,15 @@ public class FileBackedTaskManagerTest {
 
         FileBackedTaskManager fileBackedTaskManager2 = Managers.loadFromFile(file);
         Assertions.assertNotNull(fileBackedTaskManager2.getTask(task.getId()), "task не загрузилась из файла");
-        Assertions.assertTrue(fileBackedTaskManager2.getHistory().contains(task), "история просмотров" +
-                " не загрузилась из файла");
+        Assertions.assertNotNull(fileBackedTaskManager2.getEpic(epic.getId()), "epic не загрузилась из файла");
+        Assertions.assertTrue(fileBackedTaskManager2.getHistory().contains(task), "история просмотра task" +
+                " не загрузилась из файла в список");
+        Assertions.assertEquals(task, fileBackedTaskManager2.getHistory().get(0), "запись в списке с историей просмотра" +
+                " task не на своем месте");
+        Assertions.assertTrue(fileBackedTaskManager2.getHistory().contains(epic), "история просмотра epic" +
+                " не загрузилась из файла в список");
+        Assertions.assertEquals(epic, fileBackedTaskManager2.getHistory().get(1), "запись в списке с историей просмотра" +
+                " epic не на своем месте");
         Assertions.assertNull(fileBackedTaskManager2.getSubtask(subTask.getId()), "удаленная subTask загружена" +
                 " из файла в историю просмотров");
         Assertions.assertFalse(fileBackedTaskManager2.getHistory().contains(subTask), "история просмотра" +
