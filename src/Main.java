@@ -2,6 +2,8 @@ import managers.Managers;
 import managers.TaskManager;
 import tasks.*;
 import java.io.File;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 
 public class Main {
@@ -11,9 +13,11 @@ public class Main {
         TaskManager fileBackedTaskManager = Managers.loadFromFile(new File("src\\resources\\tasks.csv"));
 
         System.out.println("Создаем две задачи:");
-        Task newTask1 = new Task("Приготовить завтрак", "Приготовить кашу и чай зеленый с сахаром и накрыть на стол");
+        Task newTask1 = new Task("Приготовить завтрак", "Приготовить кашу и чай зеленый с сахаром и накрыть на стол",
+                LocalDateTime.now(), Duration.ofMinutes(30));
         System.out.println(fileBackedTaskManager.addTask(newTask1));
-        Task newTask2 = new Task("Прибраться на кухне", "Помыть посуду и протереть пол и убрать пыль");
+        Task newTask2 = new Task("Прибраться на кухне", "Помыть посуду и протереть пол и убрать пыль",
+                LocalDateTime.now().plusHours(1), Duration.ofMinutes(40));
         System.out.println(fileBackedTaskManager.addTask(newTask2));
 
         System.out.println("Создание двух сложных Epic задач:");
@@ -23,12 +27,20 @@ public class Main {
         System.out.println(fileBackedTaskManager.addEpic(newEpic2));
 
         System.out.println("Cоздание трех подзадач");
-        SubTask newSubTask1 = new SubTask("Выбрать подарок", "Изучить предложения и забронировать подарок");
+        SubTask newSubTask1 = new SubTask("Выбрать подарок", "Изучить предложения и забронировать подарок",
+                LocalDateTime.now().plusHours(4), Duration.ofMinutes(20));
         System.out.println(fileBackedTaskManager.addSubTask(newEpic1.getId(), newSubTask1));
-        SubTask newSubTask2 = new SubTask("Забрать и вручить подарок", "Забрать подарок по адресу и вручить.");
+        SubTask newSubTask2 = new SubTask("Забрать и вручить подарок", "Забрать подарок по адресу и вручить.",
+                LocalDateTime.now().plusHours(3), Duration.ofMinutes(55));
         System.out.println(fileBackedTaskManager.addSubTask(newEpic1.getId(), newSubTask2));
-        SubTask newSubTask3 = new SubTask("Собрать рекомендации", "Поспрашивать у всех знакомых");
+        SubTask newSubTask3 = new SubTask("Собрать рекомендации", "Поспрашивать у всех знакомых",
+                LocalDateTime.now().plusHours(2), Duration.ofMinutes(15));
         System.out.println(fileBackedTaskManager.addSubTask(newEpic2.getId(), newSubTask3));
+
+        System.out.println("Создание 4 подзадачи с пересекающейся продолжительность:");
+        SubTask newSubTask4 = new SubTask("Название", "Описание",
+             LocalDateTime.now().plusHours(2).plusMinutes(5), Duration.ofMinutes(40));
+        System.out.println(fileBackedTaskManager.addSubTask(newEpic2.getId(), newSubTask4));
 
         System.out.println("Вывод списка всех задач:");
         System.out.println(fileBackedTaskManager.getAllTasks());
@@ -37,9 +49,12 @@ public class Main {
         System.out.println("Вывод списка всех подзадач");
         System.out.println(fileBackedTaskManager.getAllSubTasks());
 
+        System.out.println("Вывод списка задач и подзадач по приоритету");
+        System.out.println(fileBackedTaskManager.getPrioritizedTasks());
+
         System.out.println("Изменение описания в задаче:");
         Task taskToUpdate = fileBackedTaskManager.getTask(newTask1.getId());
-        taskToUpdate.setDescription("Приготовить кашу, кофе, накрыть на стол");
+        taskToUpdate.setDescription("Приготовить кашу и кофе и накрыть на стол");
         fileBackedTaskManager.updateTask(taskToUpdate);
         System.out.println("Вывод задачи по идентификатору:");
         System.out.println(fileBackedTaskManager.getTask(taskToUpdate.getId()));
@@ -67,6 +82,9 @@ public class Main {
        //Второй запуск приложения
         /*TaskManager fileBackedTaskManager = Managers.loadFromFile(new File("src\\resources\\tasks.csv"));
 
+        System.out.println("Вывод списка задач и подзадач по приоритету:");
+        System.out.println(fileBackedTaskManager.getPrioritizedTasks());
+
         System.out.println("Вывод списка всех подзадач по идентификатору Epic");
         System.out.println(fileBackedTaskManager.getAllSubTaskOfEpic(3));
 
@@ -79,6 +97,9 @@ public class Main {
 
         System.out.println("Вывод истории просмотра задач:");
         System.out.println(fileBackedTaskManager.getHistory());
+
+        System.out.println("Вывод списка задач и подзадач по приоритету:");
+        System.out.println(fileBackedTaskManager.getPrioritizedTasks());
         System.exit(0);*/
 
         //Третий запуск приложения

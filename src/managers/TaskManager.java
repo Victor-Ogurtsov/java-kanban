@@ -1,7 +1,6 @@
 package managers;
 
 import tasks.*;
-
 import java.util.List;
 
 public interface TaskManager {
@@ -48,4 +47,16 @@ public interface TaskManager {
     void removeAllTasksTypes();
 
     List<Task> getHistory();
+
+    void setActualStartTimeEpic(Epic epic);
+
+    void setActualEndTimeEpic(Epic epic);
+
+    void setActualDurationEpic(Epic epic);
+
+    List<Task> getPrioritizedTasks();
+
+    boolean checkIntersectionDurationTask(Task task1,Task task2);
+
+    void setActualParametersEpic(Epic epic);
 }

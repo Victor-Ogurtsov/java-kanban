@@ -1,34 +1,42 @@
-import managers.HistoryManager;
+package historyManagerTest;
 import managers.InMemoryTaskManager;
 import managers.Managers;
 import managers.TaskManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import tasks.Task;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
+public abstract class HistoryManagerTest<T extends TaskManager> {
 
-public class InMemoryHistoryManagerTest {
+    protected T taskManager;
 
     @Test // убедитесь, что задачи, добавляемые в HistoryManager, сохраняют предыдущую версию задачи и её данных.
     public void shouldReturnEqualsTask() {
         InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager();
-        Task task = inMemoryTaskManager.addTask(new Task("name1", "descriptions1"));
+        Task task = inMemoryTaskManager.addTask(new Task("name1", "descriptions1",
+                LocalDateTime.now(), Duration.ofMinutes(10)));
 
         Task newTask = inMemoryTaskManager.getTask(task.getId());
         List<Task> tasksHistory = inMemoryTaskManager.getHistory();
 
-        Assertions.assertTrue(tasksHistory.contains(task), "Задача полученная методом getTask(Task task) не сохранена в InMemoryHistoryManager");
+        Assertions.assertTrue(tasksHistory.contains(task), "Задача полученная методом getTask(Task task) не" +
+                " сохранена в InMemoryHistoryManager");
         newTask.setDescription("descriptions2");
         inMemoryTaskManager.updateTask(newTask);
-        Assertions.assertFalse(tasksHistory.contains(newTask), "После изменеиня задачи в inMemoryTaskManager задача изменилась в InMemoryHistoryManager");
+        Assertions.assertFalse(tasksHistory.contains(newTask), "После изменения задачи в inMemoryTaskManager" +
+                " задача изменилась в InMemoryHistoryManager");
     }
 
     @Test
     public void shouldReturnListWithOneInstanceTaskAndTheLastPlace() {
         TaskManager inMemoryTaskManager = Managers.getDefault();
-        Task task1 = inMemoryTaskManager.addTask(new Task("name1", "descriptions1"));
-        Task task2 = inMemoryTaskManager.addTask(new Task("name2", "descriptions2"));
+        Task task1 = inMemoryTaskManager.addTask(new Task("name1", "descriptions1", LocalDateTime.now(),
+                Duration.ofMinutes(10)));
+        Task task2 = inMemoryTaskManager.addTask(new Task("name2", "descriptions2", LocalDateTime.now()
+                .plusHours(1), Duration.ofMinutes(10)));
 
         inMemoryTaskManager.getTask(task1.getId());
         inMemoryTaskManager.getTask(task2.getId());
@@ -42,7 +50,8 @@ public class InMemoryHistoryManagerTest {
     @Test
     public void shouldEqualZeroWhenRemoveTask(){
         TaskManager inMemoryTaskManager = Managers.getDefault();
-        Task task1 = inMemoryTaskManager.addTask(new Task("name1", "descriptions1"));
+        Task task1 = inMemoryTaskManager.addTask(new Task("name1", "descriptions1", LocalDateTime.now(),
+                Duration.ofMinutes(10)));
 
         inMemoryTaskManager.getTask(task1.getId());
         inMemoryTaskManager.removeTask(task1.getId());

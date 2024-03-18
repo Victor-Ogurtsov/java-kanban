@@ -1,7 +1,6 @@
 package managers;
 import tasks.*;
 import java.io.*;
-import java.util.List;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
 
@@ -35,7 +34,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             builder.append(FormatterUtil.taskToString(subTask));
             builder.append("\n");
         }
-        builder.append(FormatterUtil.historyToString(historyManager));
+        for (Task task : historyManager.getHistory()){
+            builder.append("History,");
+            builder.append(FormatterUtil.taskToString(task));
+            builder.append("\n");
+        }
         return builder.toString();
     }
 
@@ -45,23 +48,13 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         } else if (task instanceof SubTask) {
             subTasks.put(task.getId(), (SubTask) task);
             epics.get(((SubTask) task).getEpicId()).getSubTasksId().add(task.getId());
+            tasksByPriority.add(task);
         } else {
             tasks.put(task.getId(), task);
+            tasksByPriority.add(task);
         }
         if (id <= task.getId()) {
             id = task.getId() + 1;
-        }
-    }
-
-    public void loadHistory(List<Integer> hystoryList) {
-        for (Integer id : hystoryList) {
-            if (tasks.containsKey(id)) {
-                historyManager.add(tasks.get(id));
-            } else if (epics.containsKey(id)) {
-                historyManager.add(epics.get(id));
-            } else if (subTasks.containsKey(id)) {
-                historyManager.add(subTasks.get(id));
-            }
         }
     }
 
@@ -70,9 +63,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             while (bufferedReader.ready()) {
                 String line = bufferedReader.readLine();
-                if (line.contains("History")){
-                    List<Integer> idHystoryList = FormatterUtil.listHistoryFromString(line);
-                    loadHistory(idHystoryList);
+                if (line.startsWith("History")){
+                    Task task = FormatterUtil.taskFromString(line.substring(8));
+                    historyManager.add(task);
                 } else if (line.contains("TASK") || line.contains("EPIC") || line.contains("SUBTASK")) {
                     Task task = FormatterUtil.taskFromString(line);
                     loadTask(task);
