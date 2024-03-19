@@ -1,5 +1,6 @@
 package historyManagerTest;
 import managers.InMemoryTaskManager;
+import managers.IntersectDurationTaskException;
 import managers.Managers;
 import managers.TaskManager;
 import org.junit.jupiter.api.Assertions;
@@ -14,7 +15,7 @@ public abstract class HistoryManagerTest<T extends TaskManager> {
     protected T taskManager;
 
     @Test // убедитесь, что задачи, добавляемые в HistoryManager, сохраняют предыдущую версию задачи и её данных.
-    public void shouldReturnEqualsTask() {
+    public void shouldReturnEqualsTask() throws IntersectDurationTaskException {
         InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager();
         Task task = inMemoryTaskManager.addTask(new Task("name1", "descriptions1",
                 LocalDateTime.now(), Duration.ofMinutes(10)));
@@ -31,7 +32,7 @@ public abstract class HistoryManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void shouldReturnListWithOneInstanceTaskAndTheLastPlace() {
+    public void shouldReturnListWithOneInstanceTaskAndTheLastPlace() throws IntersectDurationTaskException {
         TaskManager inMemoryTaskManager = Managers.getDefault();
         Task task1 = inMemoryTaskManager.addTask(new Task("name1", "descriptions1", LocalDateTime.now(),
                 Duration.ofMinutes(10)));
@@ -48,7 +49,7 @@ public abstract class HistoryManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void shouldEqualZeroWhenRemoveTask(){
+    public void shouldEqualZeroWhenRemoveTask() throws IntersectDurationTaskException {
         TaskManager inMemoryTaskManager = Managers.getDefault();
         Task task1 = inMemoryTaskManager.addTask(new Task("name1", "descriptions1", LocalDateTime.now(),
                 Duration.ofMinutes(10)));

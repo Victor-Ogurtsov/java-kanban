@@ -56,7 +56,7 @@ public interface TaskManager {
 
     List<Task> getPrioritizedTasks();
 
-    boolean checkIntersectionDurationTask(Task task1,Task task2);
+    void checkIntersectionDurationTask(Task task1,Task task2);
 
     void setActualParametersEpic(Epic epic);
 }

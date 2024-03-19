@@ -1,4 +1,5 @@
 import managers.FileBackedTaskManager;
+import managers.IntersectDurationTaskException;
 import managers.Managers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,7 +24,7 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
     }
 
     @Test
-    public void shouldLoadFromFile() throws IOException {
+    public void shouldLoadFromFile() throws IOException, IntersectDurationTaskException {
 
         Task task = taskManager.addTask(new Task("name", "descriptions",
                 LocalDateTime.now(), Duration.ofMinutes(10)));

@@ -37,10 +37,10 @@ public class Main {
                 LocalDateTime.now().plusHours(2), Duration.ofMinutes(15));
         System.out.println(fileBackedTaskManager.addSubTask(newEpic2.getId(), newSubTask3));
 
-        System.out.println("Создание 4 подзадачи с пересекающейся продолжительность:");
+        /*System.out.println("Создание 4 подзадачи с пересекающейся продолжительность:");
         SubTask newSubTask4 = new SubTask("Название", "Описание",
              LocalDateTime.now().plusHours(2).plusMinutes(5), Duration.ofMinutes(40));
-        System.out.println(fileBackedTaskManager.addSubTask(newEpic2.getId(), newSubTask4));
+        System.out.println(fileBackedTaskManager.addSubTask(newEpic2.getId(), newSubTask4));*/
 
         System.out.println("Вывод списка всех задач:");
         System.out.println(fileBackedTaskManager.getAllTasks());

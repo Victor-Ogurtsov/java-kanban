@@ -1,10 +1,12 @@
 
+import managers.IntersectDurationTaskException;
 import managers.TaskManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
+import tasks.TaskStatus;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -60,14 +62,16 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void shouldReturnNullThenAddTaskWithIntersectionDuration(){
+    public void shouldThrowExceptionThenAddTaskWithIntersectionDuration(){
         Task task1 = taskManager.addTask(new Task("name1", "descriptions1", LocalDateTime.now(), Duration.ofMinutes(10)));
-        Task task2 = taskManager.addTask(new Task("name2", "descriptions2", LocalDateTime.now(), Duration.ofMinutes(10)));
-        Task task3 = taskManager.addTask(new Task("name2", "descriptions2", LocalDateTime.now().plusMinutes(5),
-                Duration.ofMinutes(10)));
+        Task task2 = new Task("name2", "descriptions2", LocalDateTime.now(), Duration.ofMinutes(10));
+        Task task3 = new Task("name2", "descriptions2", LocalDateTime.now().plusMinutes(5),
+                Duration.ofMinutes(10));
 
-        Assertions.assertNull(task2, "Добавлена задача начинающаяся в тоже время, что и предыдущая");
-        Assertions.assertNull(task3, "Добавлена задача с пересечением по времени выполнения");
+        Assertions.assertThrows(IntersectDurationTaskException.class, () -> taskManager.addTask(task2),
+                "При добавлении задачи начинающейся в тоже время, что и предыдущая не выбрасывается исключение");
+        Assertions.assertThrows(IntersectDurationTaskException.class, () -> taskManager.addTask(task3),
+                "При добавлении задачи с пересечением по времени выполнения не выбрасывается исключение");
     }
 
 
@@ -86,7 +90,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void StartTimeAndDurationEpicShouldBeCalculatedBySubTasks(){
+    public void startTimeAndDurationEpicShouldBeCalculatedBySubTasks(){
         Epic epic = taskManager.addEpic(new Epic("name1", "descriptions1"));
         SubTask subTask1 = taskManager.addSubTask(epic.getId(), new SubTask("name2", "descriptions2",
                 LocalDateTime.now().plusMinutes(60), Duration.ofMinutes(10)));
@@ -99,6 +103,30 @@ public abstract class TaskManagerTest<T extends TaskManager> {
                         + taskManager.getSubtask(subTask2.getId()).getDuration().toMinutes()),
                 taskManager.getEpic(epic.getId()).getDuration().toMinutes(),
                 "Продолжительность Эпика не равно сумме продолжительности подзадач");
+    }
+
+    @Test
+    public void taskStatusEpicShouldBeCalculatedBySubTasks(){
+        Epic epic = taskManager.addEpic(new Epic("name1", "descriptions1"));
+        SubTask subTask1 = taskManager.addSubTask(epic.getId(), new SubTask("name2", "descriptions2",
+                LocalDateTime.now().plusMinutes(60), Duration.ofMinutes(10)));
+        SubTask subTask2 = taskManager.addSubTask(epic.getId(), new SubTask("name3", "descriptions3",
+                LocalDateTime.now(), Duration.ofMinutes(10)));
+
+        Assertions.assertTrue(epic.getTaskStatus() == TaskStatus.NEW, "Статус epic не NEW, когда у двух" +
+                "subtask статус NEW");
+
+        subTask1.setTaskStatus(TaskStatus.IN_PROGRESS);
+        taskManager.updateSubTask(subTask1);
+        Assertions.assertTrue(epic.getTaskStatus() == TaskStatus.IN_PROGRESS,"Статус epic не IN_PROGRESS," +
+                " когда у оной из двух subtask статус IN_PROGRESS");
+
+        subTask1.setTaskStatus(TaskStatus.DONE);
+        taskManager.updateSubTask(subTask1);
+        subTask2.setTaskStatus(TaskStatus.DONE);
+        taskManager.updateSubTask(subTask2);
+        Assertions.assertTrue(epic.getTaskStatus() == TaskStatus.DONE, "Статус epic не DONE, когда у двух" +
+                "subtask статус DONE");
     }
 }
 

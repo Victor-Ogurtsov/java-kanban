@@ -48,10 +48,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         } else if (task instanceof SubTask) {
             subTasks.put(task.getId(), (SubTask) task);
             epics.get(((SubTask) task).getEpicId()).getSubTasksId().add(task.getId());
-            tasksByPriority.add(task);
+            prioritizedTasks.add(task);
         } else {
             tasks.put(task.getId(), task);
-            tasksByPriority.add(task);
+            prioritizedTasks.add(task);
         }
         if (id <= task.getId()) {
             id = task.getId() + 1;
@@ -78,7 +78,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public Task addTask(Task task) {
+    public Task addTask(Task task)  {
         Task taskToAdd = super.addTask(task);
         save();
         return taskToAdd;
