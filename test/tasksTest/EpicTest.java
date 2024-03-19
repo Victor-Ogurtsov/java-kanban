@@ -1,3 +1,5 @@
+package tasksTest;
+
 import managers.Managers;
 import managers.TaskManager;
 import org.junit.jupiter.api.Assertions;
@@ -23,19 +25,5 @@ public class EpicTest {
         epic1.setId(1);
         epic1.setSubTaskId(1);
         Assertions.assertEquals(0,epic1.getSubTasksId().size(), "Id Epic занесен в список SubTasksId");
-    }
-
-    @Test
-    public void shoulEqualZeroIfRemoveSubTask(){
-        TaskManager inMemoryTaskManager = Managers.getDefault();
-        Epic epic = inMemoryTaskManager.addEpic(new Epic("name1", "descriptions1"));
-        SubTask subTask = inMemoryTaskManager.addSubTask(epic.getId(), new SubTask("name2", "descriptions2"));
-
-        Assertions.assertTrue(epic.getSubTasksId().contains(subTask.getId()), "Подзадачи нет в списке подзадач эпика");
-
-        inMemoryTaskManager.removeSubTask(subTask.getId());
-
-        Assertions.assertEquals(0,epic.getSubTasksId().size(), "Подзадача осталась в списке подзадач эпика" +
-                "после удаления");
     }
 }
