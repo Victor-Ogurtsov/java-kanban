@@ -1,32 +1,33 @@
 package managers;
 
 import tasks.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 public class FormatterUtil {
 
     public static String taskToString(Task task){
         TaskType taskType = TaskType.TASK;
-        int epicId = -1;
+        String epicId = "null";
+        String startTime = "null";
+        String duration = "null";
+
+        if(task.getStartTime() != null) {
+            startTime = task.getStartTime().format(Task.formatter);
+        }
+
+        if(task.getDuration() != null) {
+            duration = ((Long) task.getDuration().toMinutes()).toString();
+        }
+
         if (task instanceof Epic) {
             taskType = TaskType.EPIC;
         } else if (task instanceof SubTask) {
             taskType = TaskType.SUBTASK;
-            epicId = ((SubTask) task).getEpicId();
+            epicId = ((Integer)((SubTask) task).getEpicId()).toString();
         }
         return task.getId() + "," + taskType + "," + task.getName() + "," + task.getTaskStatus() + ","
-                + task.getDescription() + "," + epicId;
-    }
-
-    public static String historyToString(HistoryManager manager){
-        List<Task> taskList = manager.getHistory();
-        StringBuilder builder = new StringBuilder("History");
-        for(Task task : taskList) {
-            builder.append(",");
-            builder.append(task.getId());
-        }
-        return builder.toString();
+                + task.getDescription() + "," + epicId + "," + startTime + "," + duration;
     }
 
     public static Task taskFromString(String value){
@@ -42,7 +43,7 @@ public class FormatterUtil {
         }
 
         if (split[1].equals("TASK")) {
-            Task task = new Task(split[2], split[4]);
+            Task task = new Task(split[2], split[4], LocalDateTime.parse(split[6], Task.formatter), Duration.ofMinutes(Integer.parseInt(split[7])));
             task.setId(Integer.parseInt(split[0]));
             task.setTaskStatus(taskStatus);
             return task;
@@ -50,23 +51,20 @@ public class FormatterUtil {
             Epic epic = new Epic(split[2], split[4]);
             epic.setId(Integer.parseInt(split[0]));
             epic.setTaskStatus(taskStatus);
+            if (!split[6].equals("null")){
+                epic.setStartTime(LocalDateTime.parse(split[6], Task.formatter));
+            }
+            if (!split[7].equals("null")){
+                epic.setDuration(Duration.ofMinutes(Integer.parseInt(split[7])));
+            }
             return epic;
         } else if (split[1].equals("SUBTASK")) {
-            SubTask subTask = new SubTask(split[2], split[4]);
+            SubTask subTask = new SubTask(split[2], split[4], LocalDateTime.parse(split[6], Task.formatter), Duration.ofMinutes(Integer.parseInt(split[7])));
             subTask.setId(Integer.parseInt(split[0]));
             subTask.setTaskStatus(taskStatus);
             subTask.setEpicId(Integer.parseInt(split[5]));
             return subTask;
         }
         return null;
-    }
-
-    public static List<Integer> listHistoryFromString(String value){
-        List<Integer> hystoryList = new ArrayList<>();
-        String[] split = value.split(",");
-        for (int i = 1; i < split.length; i++) {
-            hystoryList.add(Integer.parseInt(split[i]));
-        }
-        return hystoryList;
     }
 }

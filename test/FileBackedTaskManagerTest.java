@@ -1,27 +1,40 @@
 import managers.FileBackedTaskManager;
+import managers.IntersectDurationTaskException;
 import managers.Managers;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
 
 import java.io.*;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
-public class FileBackedTaskManagerTest {
+public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
+    File file = File.createTempFile("temp", "temp");
+
+    public FileBackedTaskManagerTest() throws IOException {
+    }
+
+    @BeforeEach
+    public void setOTaskManager() throws IOException {
+        taskManager = new FileBackedTaskManager(file);
+    }
 
     @Test
-    public void shouldLoadFromFile() throws IOException {
-        File file = File.createTempFile("temp", "temp");
-        FileBackedTaskManager fileBackedTaskManager = Managers.loadFromFile(file);
+    public void shouldLoadFromFile() throws IOException, IntersectDurationTaskException {
 
-        Task task = fileBackedTaskManager.addTask(new Task("name", "descriptions"));
-        Epic epic = fileBackedTaskManager.addEpic(new Epic("name2", "descriptions2"));
-        SubTask subTask = fileBackedTaskManager.addSubTask(epic.getId(), new SubTask("name3", "descriptions3"));
-        fileBackedTaskManager.getTask(task.getId());
-        fileBackedTaskManager.getEpic(epic.getId());
-        fileBackedTaskManager.getSubtask(subTask.getId());
-        fileBackedTaskManager.removeSubTask(subTask.getId());
+        Task task = taskManager.addTask(new Task("name", "descriptions",
+                LocalDateTime.now(), Duration.ofMinutes(10)));
+        Epic epic = taskManager.addEpic(new Epic("name2", "descriptions2"));
+        SubTask subTask = taskManager.addSubTask(epic.getId(), new SubTask("name3", "descriptions3",
+                LocalDateTime.now().plusHours(1), Duration.ofMinutes(10)));
+        taskManager.getTask(task.getId());
+        taskManager.getEpic(epic.getId());
+        taskManager.getSubtask(subTask.getId());
+        taskManager.removeSubTask(subTask.getId());
 
         FileBackedTaskManager fileBackedTaskManager2 = Managers.loadFromFile(file);
         Assertions.assertNotNull(fileBackedTaskManager2.getTask(task.getId()), "task не загрузилась из файла");
