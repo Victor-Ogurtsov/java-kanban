@@ -6,7 +6,7 @@ import java.util.*;
 import tasks.*;
 
 public class InMemoryTaskManager implements TaskManager {
-    protected static int id = 1;
+    protected int id = 1;
 
     protected final Map<Integer, Task> tasks;
     protected final Map<Integer, Epic> epics;
@@ -146,11 +146,10 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public String getAllSubTaskOfEpic(int epicId){
+    public List<SubTask> getAllSubTaskOfEpic(int epicId){
         return  epics.get(epicId).getSubTasksId().stream()
                 .map(subTasks::get)
-                .toList()
-                .toString();
+                .toList();
     }
 
     @Override

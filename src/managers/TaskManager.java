@@ -30,7 +30,7 @@ public interface TaskManager {
 
     SubTask getSubtask(int id);
 
-    String getAllSubTaskOfEpic(int epicId);
+    List<SubTask> getAllSubTaskOfEpic(int epicId);
 
     void removeTask(int taskId);
 
