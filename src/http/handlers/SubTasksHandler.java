@@ -7,18 +7,16 @@ import managers.IntersectDurationTaskException;
 import managers.ManagerSaveException;
 import managers.TaskManager;
 import tasks.SubTask;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
-public class SubTasksHandler implements HttpHandler {
-    TaskManager taskManager;
-    Gson gson;
+public class SubTasksHandler extends BasicHandler implements HttpHandler {
 
-    public SubTasksHandler (TaskManager taskManager, Gson gson){
-        this.taskManager = taskManager;
-        this.gson = gson;
+    public SubTasksHandler(TaskManager taskManager, Gson gson) {
+        super(taskManager, gson);
     }
 
     @Override
@@ -64,7 +62,7 @@ public class SubTasksHandler implements HttpHandler {
                     if (subTaskFromJson.getId() == 0) {
                         int epicId = subTaskFromJson.getEpicId();
                         responseCode = 201;
-                        response = gson.toJson(taskManager.addSubTask(epicId,subTaskFromJson));
+                        response = gson.toJson(taskManager.addSubTask(epicId, subTaskFromJson));
                     } else {
                         taskManager.updateSubTask(subTaskFromJson);
                         responseCode = 201;

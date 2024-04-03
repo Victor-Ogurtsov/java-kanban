@@ -1,7 +1,6 @@
 package httpTaskServerTest.subTasksHandlerHttpTaskServerTest;
 
 import com.google.gson.Gson;
-import http.HttpTaskServer;
 import managers.TaskManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -18,10 +17,10 @@ import java.time.LocalDateTime;
 public abstract class SubTasksHandlerTest<T extends TaskManager> {
 
     protected T taskManager;
+    Gson gson;
+
     @Test
     void ShouldReturnCode200AndSubTasksListWhenGETRequest() throws IOException, InterruptedException {
-        HttpTaskServer.startHttpTaskServer(taskManager);
-        Gson gson = HttpTaskServer.getGson();
         URI uri = URI.create("http://localhost:8080/subtasks");
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
@@ -37,13 +36,10 @@ public abstract class SubTasksHandlerTest<T extends TaskManager> {
         Assertions.assertEquals(200, response.statusCode(), "Значение кода не соответствует успеху");
         Assertions.assertEquals(gson.toJson(taskManager.getAllSubTasks()), response.body(), "Список подзадач ответа" +
                 "не соответствует списку подзадач в taskManager");
-        HttpTaskServer.stopHttpTaskServer();
     }
 
     @Test
     void ShouldReturnCode200AndSubTaskWhenGETRequestAndId() throws IOException, InterruptedException {
-        HttpTaskServer.startHttpTaskServer(taskManager);
-        Gson gson = HttpTaskServer.getGson();
         URI uri = URI.create("http://localhost:8080/subtasks/2");
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
@@ -60,12 +56,10 @@ public abstract class SubTasksHandlerTest<T extends TaskManager> {
         Assertions.assertEquals(200, response.statusCode(), "Значение кода не соответствует успеху");
         Assertions.assertEquals(gson.toJson(taskManager.getSubtask(subTask1.getId())), response.body(), "Ответ не содержит" +
                 " запрошенной subTask в taskManager");
-        HttpTaskServer.stopHttpTaskServer();
     }
 
     @Test
     void ShouldReturnCode404WhenGETRequestAndSubTaskNotCreate() throws IOException, InterruptedException {
-        HttpTaskServer.startHttpTaskServer(taskManager);
         URI uri = URI.create("http://localhost:8080/subtask/1");
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
@@ -75,15 +69,11 @@ public abstract class SubTasksHandlerTest<T extends TaskManager> {
         HttpClient client = HttpClient.newHttpClient();
         HttpResponse.BodyHandler<String> handler = HttpResponse.BodyHandlers.ofString();
         HttpResponse<String> response = client.send(request, handler);
-
         Assertions.assertEquals(404, response.statusCode(), "Значение кода ответа неверно");
-        HttpTaskServer.stopHttpTaskServer();
     }
 
     @Test
     void ShouldReturnCode406WhenPOSTRequestAndTasksHaveIntersectionDuration() throws IOException, InterruptedException {
-        HttpTaskServer.startHttpTaskServer(taskManager);
-        Gson gson = HttpTaskServer.getGson();
         Epic epic = taskManager.addEpic(new Epic("name1", "descriptions1"));
         taskManager.addSubTask(epic.getId(), new SubTask("name2", "descriptions2", LocalDateTime.now(), Duration.ofMinutes(10)));
         SubTask subTask2 = new SubTask("name3", "descriptions3", LocalDateTime.now(), Duration.ofMinutes(10));
@@ -98,13 +88,10 @@ public abstract class SubTasksHandlerTest<T extends TaskManager> {
         HttpResponse.BodyHandler<String> handler = HttpResponse.BodyHandlers.ofString();
         HttpResponse<String> response = client.send(request, handler);
         Assertions.assertEquals(406, response.statusCode(), "Значение кода ответа неверно");
-        HttpTaskServer.stopHttpTaskServer();
     }
 
     @Test
     void shouldReturnCode201AndCreateSubTaskWhenPOSTRequestAndSubTaskNotHaveId() throws IOException, InterruptedException {
-        HttpTaskServer.startHttpTaskServer(taskManager);
-        Gson gson = HttpTaskServer.getGson();
         Epic epic = taskManager.addEpic(new Epic("name1", "descriptions1"));
         SubTask subTask = new SubTask("name2", "descriptions2", LocalDateTime.now(), Duration.ofMinutes(10));
         subTask.setEpicId(epic.getId());
@@ -121,13 +108,10 @@ public abstract class SubTasksHandlerTest<T extends TaskManager> {
         Assertions.assertEquals(201, response.statusCode(), "Значение кода не соответствует успеху");
         Assertions.assertEquals(gson.toJson(subTask), response.body(), "subTask из тела запроса" +
                 " не записана в менеджер задач");
-        HttpTaskServer.stopHttpTaskServer();
     }
 
     @Test
     void shouldReturnCode201AndUpdateSubTaskWhenPOSTRequestAndSubTaskHaveId() throws IOException, InterruptedException {
-        HttpTaskServer.startHttpTaskServer(taskManager);
-        Gson gson = HttpTaskServer.getGson();
         Epic epic = taskManager.addEpic(new Epic("name1", "descriptions1"));
         SubTask subTask1 = taskManager.addSubTask(epic.getId(), new SubTask("name2", "descriptions2", LocalDateTime.now(), Duration.ofMinutes(10)));
         SubTask subTaskForUpdate = new SubTask("NEW name2", "descriptions2", LocalDateTime.now(), Duration.ofMinutes(10));
@@ -145,12 +129,10 @@ public abstract class SubTasksHandlerTest<T extends TaskManager> {
         Assertions.assertEquals(201, response.statusCode(), "Значение кода не соответствует успеху");
         Assertions.assertEquals(subTaskForUpdate, taskManager.getSubtask(subTask1.getId()), "subTask из тела запроса" +
                 " не обновила subTask в менеджере задач");
-        HttpTaskServer.stopHttpTaskServer();
     }
 
     @Test
     void shouldReturnCode200WhenDELETERequest() throws IOException, InterruptedException {
-        HttpTaskServer.startHttpTaskServer(taskManager);
         Epic epic = taskManager.addEpic(new Epic("name1", "descriptions1"));
         SubTask subTask1 = taskManager.addSubTask(epic.getId(), new SubTask("name2", "descriptions2", LocalDateTime.now(), Duration.ofMinutes(10)));
         URI uri = URI.create("http://localhost:8080/subtasks?id=2");
@@ -164,6 +146,5 @@ public abstract class SubTasksHandlerTest<T extends TaskManager> {
         HttpResponse<String> response = client.send(request, handler);
         Assertions.assertEquals(200, response.statusCode(), "Значение кода не соответствует успеху");
         Assertions.assertNull(taskManager.getSubtask(subTask1.getId()), "Подзадача из запроса осталась taskManager");
-        HttpTaskServer.stopHttpTaskServer();
     }
 }

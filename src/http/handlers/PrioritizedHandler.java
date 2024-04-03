@@ -8,13 +8,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
-public class PrioritizedHandler implements HttpHandler {
-    TaskManager taskManager;
-    Gson gson;
+public class PrioritizedHandler extends BasicHandler implements HttpHandler {
 
-    public PrioritizedHandler(TaskManager taskManager, Gson gson){
-        this.taskManager = taskManager;
-        this.gson = gson;
+    public PrioritizedHandler(TaskManager taskManager, Gson gson) {
+        super(taskManager, gson);
     }
 
     @Override

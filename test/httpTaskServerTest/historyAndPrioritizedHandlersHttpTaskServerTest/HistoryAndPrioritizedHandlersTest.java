@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
-
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -19,11 +18,10 @@ import java.time.LocalDateTime;
 
 public abstract class HistoryAndPrioritizedHandlersTest<T extends TaskManager> {
     protected T taskManager;
+    Gson gson;
 
     @Test
     void ShouldReturnCode200AndHistoryListWhenHistoryRequest() throws IOException, InterruptedException {
-        HttpTaskServer.startHttpTaskServer(taskManager);
-        Gson gson = HttpTaskServer.getGson();
         URI uri = URI.create("http://localhost:8080/history");
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
@@ -46,8 +44,6 @@ public abstract class HistoryAndPrioritizedHandlersTest<T extends TaskManager> {
 
     @Test
     void ShouldReturnCode200AndPrioritizedListWhenPrioritizedRequest() throws IOException, InterruptedException {
-        HttpTaskServer.startHttpTaskServer(taskManager);
-        Gson gson = HttpTaskServer.getGson();
         URI uri = URI.create("http://localhost:8080/prioritized");
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
@@ -64,6 +60,5 @@ public abstract class HistoryAndPrioritizedHandlersTest<T extends TaskManager> {
         Assertions.assertEquals(200, response.statusCode(), "Значение кода не соответствует успеху");
         Assertions.assertEquals(gson.toJson(taskManager.getPrioritizedTasks()), response.body(), "Список истории просмотра ответа" +
                 "не соответствует списку истории просмотра в taskManager");
-        HttpTaskServer.stopHttpTaskServer();
     }
 }

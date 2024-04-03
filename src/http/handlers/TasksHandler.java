@@ -7,18 +7,16 @@ import managers.IntersectDurationTaskException;
 import managers.ManagerSaveException;
 import managers.TaskManager;
 import tasks.Task;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
-public class TasksHandler implements HttpHandler {
-    TaskManager taskManager;
-    Gson gson;
+public class TasksHandler extends BasicHandler implements HttpHandler {
 
-    public TasksHandler (TaskManager taskManager, Gson gson){
-        this.taskManager = taskManager;
-        this.gson = gson;
+    public TasksHandler(TaskManager taskManager, Gson gson) {
+        super(taskManager, gson);
     }
 
     @Override
@@ -29,7 +27,7 @@ public class TasksHandler implements HttpHandler {
         InputStream inputStream = httpExchange.getRequestBody();
         String bodyString = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
         String info = "Запрос: метод - " + method + "; путь -  "
-         + path + "; параметры строки запроса - " + query + "; тело - " + bodyString;
+                + path + "; параметры строки запроса - " + query + "; тело - " + bodyString;
         System.out.println(info);
         int responseCode = 0;
 
