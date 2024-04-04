@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 
 public class FormatterUtil {
 
-    public static String taskToString(Task task){
+    public static String taskToString(Task task) {
         TaskType taskType = TaskType.TASK;
         String epicId = "null";
         String startTime = "null";
@@ -51,10 +51,10 @@ public class FormatterUtil {
             Epic epic = new Epic(split[2], split[4]);
             epic.setId(Integer.parseInt(split[0]));
             epic.setTaskStatus(taskStatus);
-            if (!split[6].equals("null")){
+            if (!split[6].equals("null")) {
                 epic.setStartTime(LocalDateTime.parse(split[6], Task.formatter));
             }
-            if (!split[7].equals("null")){
+            if (!split[7].equals("null")) {
                 epic.setDuration(Duration.ofMinutes(Integer.parseInt(split[7])));
             }
             return epic;

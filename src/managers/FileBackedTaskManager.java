@@ -19,7 +19,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             }
     }
 
-    public String tasksAndHistoryToString(){
+    public String tasksAndHistoryToString() {
         StringBuilder builder = new StringBuilder("id,type,name,status,description,epic\n");
 
         for (Task task : tasks.values()) {
@@ -34,7 +34,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             builder.append(FormatterUtil.taskToString(subTask));
             builder.append("\n");
         }
-        for (Task task : historyManager.getHistory()){
+        for (Task task : historyManager.getHistory()) {
             builder.append("History,");
             builder.append(FormatterUtil.taskToString(task));
             builder.append("\n");
@@ -63,7 +63,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             while (bufferedReader.ready()) {
                 String line = bufferedReader.readLine();
-                if (line.startsWith("History")){
+                if (line.startsWith("History")) {
                     Task task = FormatterUtil.taskFromString(line.substring(8));
                     historyManager.add(task);
                 } else if (line.contains("TASK") || line.contains("EPIC") || line.contains("SUBTASK")) {
@@ -78,7 +78,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public Task addTask(Task task)  {
+    public Task addTask(Task task) {
         Task taskToAdd = super.addTask(task);
         save();
         return taskToAdd;
