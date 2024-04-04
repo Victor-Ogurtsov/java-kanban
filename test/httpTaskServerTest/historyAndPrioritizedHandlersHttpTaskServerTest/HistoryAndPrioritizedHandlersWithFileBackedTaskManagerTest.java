@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class HistoryAndPrioritizedHandlersWithFileBackedTaskManagerTest extends HistoryAndPrioritizedHandlersTest<FileBackedTaskManager>{
+
     @BeforeEach
     public void startHttpServerAndSetTaskManagerAndGson() throws IOException {
         File file = File.createTempFile("temp", "temp");

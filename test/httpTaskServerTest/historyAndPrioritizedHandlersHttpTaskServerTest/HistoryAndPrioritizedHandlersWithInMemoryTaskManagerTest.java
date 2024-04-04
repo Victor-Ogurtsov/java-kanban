@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import java.io.IOException;
 
 public class HistoryAndPrioritizedHandlersWithInMemoryTaskManagerTest extends HistoryAndPrioritizedHandlersTest<InMemoryTaskManager>{
+
     @BeforeEach
     public void startHttpServerAndSetTaskManagerAndGson() throws IOException {
         taskManager = Managers.getDefault();

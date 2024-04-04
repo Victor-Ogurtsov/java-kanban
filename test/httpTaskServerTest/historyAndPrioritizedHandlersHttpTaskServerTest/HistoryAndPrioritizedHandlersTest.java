@@ -17,6 +17,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 
 public abstract class HistoryAndPrioritizedHandlersTest<T extends TaskManager> {
+
     protected T taskManager;
     Gson gson;
 

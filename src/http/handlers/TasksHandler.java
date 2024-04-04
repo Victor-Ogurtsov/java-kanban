@@ -85,7 +85,6 @@ public class TasksHandler extends BasicHandler implements HttpHandler {
                 break;
         }
         httpExchange.sendResponseHeaders(responseCode, 0);
-
         try (OutputStream os = httpExchange.getResponseBody()) {
             os.write(response.getBytes(StandardCharsets.UTF_8));
         }

@@ -30,8 +30,8 @@ public class SubTasksHandler extends BasicHandler implements HttpHandler {
                 + path + "; параметры строки запроса - " + query + "; тело - " + bodyString;
         System.out.println(info);
         int responseCode = 0;
-
         String response = "";
+
         switch (method) {
             case "GET":
                 try {
@@ -86,7 +86,6 @@ public class SubTasksHandler extends BasicHandler implements HttpHandler {
                 break;
         }
         httpExchange.sendResponseHeaders(responseCode, 0);
-
         try (OutputStream os = httpExchange.getResponseBody()) {
             os.write(response.getBytes(StandardCharsets.UTF_8));
         }
