@@ -29,7 +29,6 @@ public class HttpTaskServer {
         httpServer.createContext("/subtasks", new SubTasksHandler(taskManager, gson));
         httpServer.createContext("/history", new HistoryHandler(taskManager, gson));
         httpServer.createContext("/prioritized", new PrioritizedHandler(taskManager, gson));
-
         httpServer.start();
     }
 
